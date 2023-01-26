@@ -12,6 +12,7 @@
 <body>
     <?php include 'partials/_header.php';?>
     <?php include 'partials/_dbconnect.php';?>
+    
 
     <!-- Slider starts here -->
 
