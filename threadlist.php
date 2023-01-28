@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>iDiscuss-Coding forum</title>
     <style>
-        #ques{
-            min-height: 433px;
-        }
-        </style>
+    #ques {
+        min-height: 433px;
+    }
+    </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 </head>
@@ -18,44 +18,67 @@
     <?php include 'partials/_header.php';?>
     <?php include 'partials/_dbconnect.php';?>
     <?php
-      $id=$_GET['threadid'];
-      $sql="Select * from thread where thread_id=$id";
+      $id=$_GET['catid'];
+      $sql="Select * from categories where category_id=$id";
       $result=mysqli_query($conn,$sql);
       while($row=mysqli_fetch_assoc($result)){
-      $title=$row['thread_title'];
-      $desc=$row['thread_description'];  
+      $catname=$row['category_name'];
+      $catdesc=$row['category_description'];  
 
     }
     
     ?>
+    <?php
+      echo $_SERVER['REQUEST_METHOD'];
+    ?>
 
     <div class="container">
         <div class="jumbotron bg-secondary my-3 py-2 px-2">
-            <h1 class="display-4"><?php echo $title; ?> </h1>
-            <p class="lead"><?php echo $desc; ?></p>
+            <h1 class="display-4">Welcome to <?php echo $catname; ?> forums</h1>
+            <p class="lead"><?php echo $catdesc; ?></p>
             <hr class="my-4">
             <p>This is a peer to peer forum for sharing knowledge.Keep it friendly.
-Be courteous and respectful. Appreciate that others may have an opinion different from yours.
-Stay on topic. ...
-Share your knowledge.</p>
+                Be courteous and respectful. Appreciate that others may have an opinion different from yours.
+                Stay on topic. ...
+                Share your knowledge.</p>
             <p class="lead">
-                <p><b>Posted by :Viraj</b></p>
+                <a class="btn btn-success btn-lg" href="#" role="button">Learn more</a>
             </p>
         </div>
     </div>
+    <div class="container">
+        <h1 class="py-2">Ask a Question</h1>
+        <form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Problem title</label>
+                <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">Keep problem short and crispy as possible.</div>
+            </div>
+            <div class="form-group-3">
+                 <label for="description" class="form-label">Elaborate your concern</label>
+                <textarea class="form-control"  id="description" name="description"
+                    style="height: 100px"></textarea>
+                <label for="floatingTextarea2">Comments</label>
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
     <div class="container" id="ques">
-        <h1 class="py-3">Discussions</h1>
-        <!-- <?php
+        <h1 class="py-3">Browse Questions</h1>
+        <?php
       $id=$_GET['catid'];
       $sql="Select * from thread where thread_cat_id=$id";
       $result=mysqli_query($conn,$sql);
+      $noResult=true;
       while($row=mysqli_fetch_assoc($result)){
       $id=$row['thread_id'];
+      $noResult=false;
       $title=$row['thread_title'];
       $desc=$row['thread_description'];  
 
     
-        echo '<div class="media d-flex my-3" >
+        echo '<div class="media d-flex my-3 " >
             <img class="mr-3" src="img/userdefault.png" alt="Generic placeholder image" width="64px" height="34px">
             <div class="media-body">
                 <h5 class="mt-0"><a href="thread.php?threadid='.$id.'" class="text-dark">'.$title.'</a></h5>
@@ -63,8 +86,18 @@ Share your knowledge.</p>
             </div>
         </div>';
     }
-    ?> -->
-      <!-- Remove later,Just to check the alignment -->
+    // echo var_dump($noResult);
+    if($noResult)
+    {
+        echo '<div class="jumbotron jumbotron-fluid bg-secondary py-3">
+        <div class="container">
+          <p class="display-4">No threads found</p>
+          <p class="lead">Be the first one to ask .</p>
+        </div>
+      </div>';
+    }
+    ?>
+        <!-- Remove later,Just to check the alignment -->
         <!-- <div class="media d-flex my-3">
             <img class="mr-3" src="img/userdefault.png" alt="Generic placeholder image" width="64px" height="34px">
             <div class="media-body">
