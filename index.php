@@ -27,10 +27,10 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="http://source.unsplash.com/1236x500/?coding,python" class="d-block w-100" alt="...">
+                <img src="img/slider-1.jpg" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item">
-                <img src="http://source.unsplash.com/1236x500/?coding,html" class="d-block w-100" alt="...">
+                <img src="img/slider-2.jpg" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item">
                 <img src="http://source.unsplash.com/1236x500/?coding,css" class="d-block w-100" alt="...">
@@ -62,7 +62,7 @@
               $desc=$row['category_description'];
               echo '<div class="col-md-4 my-2 ">
               <div class="card" style="width: 18rem;">
-                  <img src="http://source.unsplash.com/500x300/?'.$cat.',coding" class="card-img-top" alt="...">
+                  <img src="http://source.unsplash.com/300x200/?coding,'.$cat.'" class="card-img-top" alt="...">
                   <div class="card-body">
                       <h5 class="card-title"><a href="threadlist.php?catid='.$id.'">'.$cat.'</a></h5>
                       <p class="card-text">'.substr($desc,0,90).'...</p>

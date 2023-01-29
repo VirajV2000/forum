@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 echo '<nav class="navbar navbar-dark navbar-expand-lg bg-dark  ">
 <div class="container-fluid ">
   <a class="navbar-brand" href="index.php">iDiscuss</a>
@@ -27,21 +29,34 @@ echo '<nav class="navbar navbar-dark navbar-expand-lg bg-dark  ">
       <li class="nav-item">
         <a class="nav-link " href="contact.php">Contact</a>
       </li>
-    </ul>
+    </ul>';
    
      
     
-    <form class="d-flex" role="search">
+    echo '<form class="d-flex" role="search">
       <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-success" type="submit">Search</button>
-      </form>
-      <div class="mx-2">
-    <button class="btn btn-outline-success ml-2"  data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
-    <button class="btn btn-outline-success mx-1"data-bs-toggle="modal" data-bs-target="#signupModal">Signup</button> 
-    </div>
-</div>
-</div>
-</nav>';
+      </form>';
+      if(isset($_SESSION['loggedin'])&&$_SESSION['loggedin']=="true"){
+      echo '<div class="mx-2"><p class="text-light my-0 mx-2">welcome '.$_SESSION['useremail'].'</p>'.
+     '<a href="partials/_logout.php" class="btn btn-outline-success float-end">Logout</a>';
+      }
+      else{
+        echo '<button class="btn btn-outline-success mx-2"  data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+        <button class="btn btn-outline-success mx-1"data-bs-toggle="modal" data-bs-target="#signupModal">Signup</button> ';
+      }
+    echo '
+          </div>
+      </div>
+      </div>
+      </nav>';
  include 'partials/_loginModal.php';
  include 'partials/_signupModal.php';
+ if(isset($_GET['signupsuccess'])&&$_GET['signupsuccess']=="true")
+ {
+  echo '<div class="alert alert-success alert-dismissible fade show my-0" role="alert">
+  <strong>Success!</strong> You can now login uisng your credentials.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>';
+ }
 ?>

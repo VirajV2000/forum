@@ -28,6 +28,26 @@
     }
     
     ?>
+    <!-- to insert a comment into db -->
+    <?php
+     $method= $_SERVER['REQUEST_METHOD'];
+     //insert into comment db
+     $showAlert=false;
+     if($method=='POST'){
+        $comment=$_POST['comment'];
+        
+        $sql="INSERT INTO `comment` ( `comment_by`, `comment_content`, `thread_id`, `comment_time`) VALUES ( '0', '$comment', '$id', current_timestamp());";
+        $result=mysqli_query($conn,$sql);
+        $showAlert=true;
+        if($showAlert)
+        {
+            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Your comment has been added!. 
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+        }
+     }
+    ?>
 
     <div class="container">
         <div class="jumbotron bg-secondary my-3 py-2 px-2">
@@ -39,31 +59,54 @@ Be courteous and respectful. Appreciate that others may have an opinion differen
 Stay on topic. ...
 Share your knowledge.</p>
             <p class="lead">
-                <p><b>Posted by :Viraj</b></p>
+                <p>Posted by :<b>Viraj</b></p>
             </p>
         </div>
     </div>
+    <div class="container">
+        <h1 class="py-2">Post a comment</h1>
+        <form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post">
+
+            <div class="form-group-3">
+                <label for="description" class="form-label">Type your comment</label>
+                <textarea class="form-control" id="comment" name="comment" style="height: 100px"></textarea>
+
+            </div>
+
+            <button type="submit" class="btn btn-success my-2">Submit</button>
+        </form>
+    </div>
     <div class="container" id="ques">
         <h1 class="py-3">Discussions</h1>
-        <!-- <?php
-      $id=$_GET['catid'];
-      $sql="Select * from thread where thread_cat_id=$id";
+        <?php
+      $id=$_GET['threadid'];
+      $sql="Select * from comment where thread_id=$id";
       $result=mysqli_query($conn,$sql);
+      $noResult=true;
       while($row=mysqli_fetch_assoc($result)){
-      $id=$row['thread_id'];
-      $title=$row['thread_title'];
-      $desc=$row['thread_description'];  
-
+    $noResult=false;
+      $id=$row['comment_id'];
+      $content= $row['comment_content'];
+      $comment_time=$row['comment_time'];
     
         echo '<div class="media d-flex my-3" >
             <img class="mr-3" src="img/userdefault.png" alt="Generic placeholder image" width="64px" height="34px">
             <div class="media-body">
-                <h5 class="mt-0"><a href="thread.php?threadid='.$id.'" class="text-dark">'.$title.'</a></h5>
-                '.$desc.'
+               <p class="fw-bold my-0">Anonymous user at '.$comment_time.'</p>
+                '.$content.'
             </div>
         </div>';
     }
-    ?> -->
+    if($noResult)
+    {
+        echo '<div class="jumbotron jumbotron-fluid bg-secondary py-3">
+        <div class="container">
+          <p class="display-4">No comments found</p>
+          <p class="lead">Be the first one to ask .</p>
+        </div>
+      </div>';
+    }
+    ?>
       <!-- Remove later,Just to check the alignment -->
         <!-- <div class="media d-flex my-3">
             <img class="mr-3" src="img/userdefault.png" alt="Generic placeholder image" width="64px" height="34px">

@@ -29,7 +29,23 @@
     
     ?>
     <?php
-      echo $_SERVER['REQUEST_METHOD'];
+     $method= $_SERVER['REQUEST_METHOD'];
+     //insert into thread db
+     $showAlert=false;
+     if($method=='POST'){
+        $th_title=$_POST['title'];
+        $th_desc=$_POST['description'];
+        $sql="INSERT INTO `thread` ( `thread_title`, `thread_description`, `thread_cat_id`, `thread_user_id`, `timestamp`) VALUES ( '$th_title', '$th_desc', '$id', '0', current_timestamp())";
+        $result=mysqli_query($conn,$sql);
+        $showAlert=true;
+        if($showAlert)
+        {
+            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Your thread has been added!Please wait for community to respond. 
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+        }
+     }
     ?>
 
     <div class="container">
@@ -55,13 +71,12 @@
                 <div id="emailHelp" class="form-text">Keep problem short and crispy as possible.</div>
             </div>
             <div class="form-group-3">
-                 <label for="description" class="form-label">Elaborate your concern</label>
-                <textarea class="form-control"  id="description" name="description"
-                    style="height: 100px"></textarea>
-                <label for="floatingTextarea2">Comments</label>
+                <label for="description" class="form-label">Elaborate your concern</label>
+                <textarea class="form-control" id="description" name="description" style="height: 100px"></textarea>
+
             </div>
 
-            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="submit" class="btn btn-success my-2">Submit</button>
         </form>
     </div>
     <div class="container" id="ques">
@@ -76,11 +91,12 @@
       $noResult=false;
       $title=$row['thread_title'];
       $desc=$row['thread_description'];  
-
+      $thread_time=$row['timestamp'];
     
         echo '<div class="media d-flex my-3 " >
             <img class="mr-3" src="img/userdefault.png" alt="Generic placeholder image" width="64px" height="34px">
             <div class="media-body">
+            <p class="fw-bold my-0">Anonymous user at '.$thread_time.'</p>
                 <h5 class="mt-0"><a href="thread.php?threadid='.$id.'" class="text-dark">'.$title.'</a></h5>
                 '.$desc.'
             </div>
