@@ -12,11 +12,12 @@
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-    <?php include 'partials/_header.php';?>
     <?php include 'partials/_dbconnect.php';?>
+    <?php include 'partials/_header.php';?>
     <?php
       $id=$_GET['catid'];
       $sql="Select * from categories where category_id=$id";
@@ -35,7 +36,15 @@
      if($method=='POST'){
         $th_title=$_POST['title'];
         $th_desc=$_POST['description'];
-        $sql="INSERT INTO `thread` ( `thread_title`, `thread_description`, `thread_cat_id`, `thread_user_id`, `timestamp`) VALUES ( '$th_title', '$th_desc', '$id', '0', current_timestamp())";
+        
+        $th_title=str_replace("<","&lt;",$th_title);
+        $th_title=str_replace(">","&gt;",$th_title);
+
+        $th_desc=str_replace("<","&lt;",$th_desc);
+        $th_desc=str_replace(">","&gt;",$th_desc);
+
+        $user_id=$_SESSION['sno'];
+        $sql="INSERT INTO `thread` ( `thread_title`, `thread_description`, `thread_cat_id`, `thread_user_id`, `timestamp`) VALUES ( '$th_title', '$th_desc', '$id', '$user_id', current_timestamp())";
         $result=mysqli_query($conn,$sql);
         $showAlert=true;
         if($showAlert)
@@ -62,9 +71,11 @@
             </p>
         </div>
     </div>
-    <div class="container">
+    <?php
+    if(isset($_SESSION['loggedin'])&&$_SESSION['loggedin']=="true"){
+        echo '<div class="container">
         <h1 class="py-2">Ask a Question</h1>
-        <form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post">
+        <form action="'. $_SERVER['REQUEST_URI'].'" method="post">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Problem title</label>
                 <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
@@ -78,7 +89,17 @@
 
             <button type="submit" class="btn btn-success my-2">Submit</button>
         </form>
-    </div>
+    </div>';
+    }
+    else{
+        echo '<div class="container">
+        <h1 class="py-2">Ask a Question</h1>
+                    <p class="lead">You are not logged in .Please login to be able to start a discusiion</p>
+               </div>';
+    }
+     
+    ?>
+    
     <div class="container" id="ques">
         <h1 class="py-3">Browse Questions</h1>
         <?php
@@ -92,13 +113,15 @@
       $title=$row['thread_title'];
       $desc=$row['thread_description'];  
       $thread_time=$row['timestamp'];
-    
+      $thread_user_id=$row['thread_user_id'];
+      $sql2="select user_email from users where sno='$thread_user_id'";      
+      $result2=mysqli_query($conn,$sql2);
+      $row2=mysqli_fetch_assoc($result2);
         echo '<div class="media d-flex my-3 " >
             <img class="mr-3" src="img/userdefault.png" alt="Generic placeholder image" width="64px" height="34px">
             <div class="media-body">
-            <p class="fw-bold my-0">Anonymous user at '.$thread_time.'</p>
                 <h5 class="mt-0"><a href="thread.php?threadid='.$id.'" class="text-dark">'.$title.'</a></h5>
-                '.$desc.'
+                '.$desc.' <p class="fw-bold my-0">Asked by:'.$row2['user_email'].' at '.$thread_time.'</p>
             </div>
         </div>';
     }

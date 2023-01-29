@@ -14,7 +14,8 @@
             {
                 session_start();
                 $_SESSION['loggedin']=true;
-                $_SESSION['useremail']=$email;
+                $_SESSION['sno']=$row['sno'];
+                $_SESSION['useremail']=$row['user_email'];
                 //echo "Logged in".$_SESSION['useremail'];
                 header("location:/forum/index.php");
             }

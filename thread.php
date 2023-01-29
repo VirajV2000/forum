@@ -12,11 +12,12 @@
         </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-    <?php include 'partials/_header.php';?>
     <?php include 'partials/_dbconnect.php';?>
+    <?php include 'partials/_header.php';?>
     <?php
       $id=$_GET['threadid'];
       $sql="Select * from thread where thread_id=$id";
@@ -24,7 +25,11 @@
       while($row=mysqli_fetch_assoc($result)){
       $title=$row['thread_title'];
       $desc=$row['thread_description'];  
-
+      $thread_user_id=$row['thread_user_id'];
+      $sql2="select user_email from users where sno='$thread_user_id'";      
+      $result2=mysqli_query($conn,$sql2);
+      $row2=mysqli_fetch_assoc($result2);
+      $posted_by=$row2['user_email'];
     }
     
     ?>
@@ -35,6 +40,8 @@
      $showAlert=false;
      if($method=='POST'){
         $comment=$_POST['comment'];
+        $comment=str_replace("<","&lt;",$comment);
+        $comment=str_replace(">","&gt;",$comment);
         $sno=$_POST['sno'];
         $sql="INSERT INTO `comment` ( `comment_by`, `comment_content`, `thread_id`, `comment_time`) VALUES ( '$sno', '$comment', '$id', current_timestamp());";
         $result=mysqli_query($conn,$sql);
@@ -59,7 +66,7 @@ Be courteous and respectful. Appreciate that others may have an opinion differen
 Stay on topic. ...
 Share your knowledge.</p>
             <p class="lead">
-                <p>Posted by :<b>Viraj</b></p>
+                <p>Posted by :<em><?php echo $posted_by;?></em></p>
             </p>
         </div>
     </div>
