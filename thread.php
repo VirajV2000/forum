@@ -35,8 +35,8 @@
      $showAlert=false;
      if($method=='POST'){
         $comment=$_POST['comment'];
-        
-        $sql="INSERT INTO `comment` ( `comment_by`, `comment_content`, `thread_id`, `comment_time`) VALUES ( '0', '$comment', '$id', current_timestamp());";
+        $sno=$_POST['sno'];
+        $sql="INSERT INTO `comment` ( `comment_by`, `comment_content`, `thread_id`, `comment_time`) VALUES ( '$sno', '$comment', '$id', current_timestamp());";
         $result=mysqli_query($conn,$sql);
         $showAlert=true;
         if($showAlert)
@@ -63,19 +63,33 @@ Share your knowledge.</p>
             </p>
         </div>
     </div>
-    <div class="container">
+    
+    <?php
+    if(isset($_SESSION['loggedin'])&&$_SESSION['loggedin']=="true"){
+       // echo $_SESSION['sno'];
+        echo '<div class="container">
         <h1 class="py-2">Post a comment</h1>
-        <form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post">
+        <form action="'. $_SERVER['REQUEST_URI'].'" method="post">
 
             <div class="form-group-3">
                 <label for="description" class="form-label">Type your comment</label>
                 <textarea class="form-control" id="comment" name="comment" style="height: 100px"></textarea>
-
+                <input type="hidden" name="sno" value="'.$_SESSION['sno'].'">
             </div>
 
             <button type="submit" class="btn btn-success my-2">Submit</button>
         </form>
-    </div>
+    </div>';
+    }
+    else{
+        echo '<div class="container">
+        <h1 class="py-2">Post a comment</h1>
+                    <p class="lead">You are not logged in .Please login to be able to post a comments.</p>
+               </div>';
+    }
+     
+    ?>
+
     <div class="container" id="ques">
         <h1 class="py-3">Discussions</h1>
         <?php
@@ -88,11 +102,15 @@ Share your knowledge.</p>
       $id=$row['comment_id'];
       $content= $row['comment_content'];
       $comment_time=$row['comment_time'];
-    
+      $thread_user_id=$row['comment_by'];
+      $sql2="select user_email from users where sno='$thread_user_id'";      
+      $result2=mysqli_query($conn,$sql2);
+      $row2=mysqli_fetch_assoc($result2);
+
         echo '<div class="media d-flex my-3" >
             <img class="mr-3" src="img/userdefault.png" alt="Generic placeholder image" width="64px" height="34px">
             <div class="media-body">
-               <p class="fw-bold my-0">Anonymous user at '.$comment_time.'</p>
+               <p class="fw-bold my-0">'.$row2['user_email'].' at '.$comment_time.'</p>
                 '.$content.'
             </div>
         </div>';
