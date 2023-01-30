@@ -18,6 +18,7 @@
 <body>
     <?php include 'partials/_dbconnect.php';?>
     <?php include 'partials/_header.php';?>
+<!-- Fetch  a particular problem title and description based on threadid  -->
     <?php
       $id=$_GET['threadid'];
       $sql="Select * from thread where thread_id=$id";
@@ -26,6 +27,7 @@
       $title=$row['thread_title'];
       $desc=$row['thread_description'];  
       $thread_user_id=$row['thread_user_id'];
+    //   Fetch a name of the user who is posted the comment
       $sql2="select user_email from users where sno='$thread_user_id'";      
       $result2=mysqli_query($conn,$sql2);
       $row2=mysqli_fetch_assoc($result2);
@@ -40,6 +42,7 @@
      $showAlert=false;
      if($method=='POST'){
         $comment=$_POST['comment'];
+        //replaing characters to save from attacks
         $comment=str_replace("<","&lt;",$comment);
         $comment=str_replace(">","&gt;",$comment);
         $sno=$_POST['sno'];
@@ -55,7 +58,7 @@
         }
      }
     ?>
-
+<!-- Displaying a particular question of thread  -->
     <div class="container">
         <div class="jumbotron bg-secondary my-3 py-2 px-2">
             <h1 class="display-4"><?php echo $title; ?> </h1>
@@ -96,7 +99,7 @@ Share your knowledge.</p>
     }
      
     ?>
-
+<!-- Displaying a comments that has made for that problem -->
     <div class="container" id="ques">
         <h1 class="py-3">Discussions</h1>
         <?php

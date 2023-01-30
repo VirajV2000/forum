@@ -29,6 +29,8 @@
     }
     
     ?>
+    
+    <!-- Inserting a thread to the thread table -->
     <?php
      $method= $_SERVER['REQUEST_METHOD'];
      //insert into thread db
@@ -43,7 +45,7 @@
         $th_desc=str_replace("<","&lt;",$th_desc);
         $th_desc=str_replace(">","&gt;",$th_desc);
 
-        $user_id=$_SESSION['sno'];
+        $user_id=$_SESSION['sno'];//user id for inserting it into the thread table
         $sql="INSERT INTO `thread` ( `thread_title`, `thread_description`, `thread_cat_id`, `thread_user_id`, `timestamp`) VALUES ( '$th_title', '$th_desc', '$id', '$user_id', current_timestamp())";
         $result=mysqli_query($conn,$sql);
         $showAlert=true;
@@ -56,7 +58,8 @@
         }
      }
     ?>
-
+      
+      <!-- Displaying respected welcome mesage to the respected category  -->
     <div class="container">
         <div class="jumbotron bg-secondary my-3 py-2 px-2">
             <h1 class="display-4">Welcome to <?php echo $catname; ?> forums</h1>
@@ -71,11 +74,13 @@
             </p>
         </div>
     </div>
+
+    <!-- Display a thread form only to the logged in users -->
     <?php
     if(isset($_SESSION['loggedin'])&&$_SESSION['loggedin']=="true"){
         echo '<div class="container">
         <h1 class="py-2">Ask a Question</h1>
-        <form action="'. $_SERVER['REQUEST_URI'].'" method="post">
+        <form action="'. $_SERVER['REQUEST_URI'].'" method="post">  
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Problem title</label>
                 <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
@@ -100,6 +105,7 @@
      
     ?>
     
+    <!-- Displaying the threads that are available to that category  -->
     <div class="container" id="ques">
         <h1 class="py-3">Browse Questions</h1>
         <?php
